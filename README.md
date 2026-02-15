@@ -23,6 +23,7 @@ A lightweight, self-hosted Function-as-a-Service platform written in Go with Lua
 * **Execution History** - Monitor function executions and logs
 * **Beautiful Error Messages** - Human-friendly error messages with code context, line numbers, and actionable suggestions
 * **Web Dashboard** - Manage functions through a clean web interface
+* **API Documentation** - Swagger UI available at `/docs`
 * **Lightweight** - Single binary, no external dependencies
 
 ## Screenshots
@@ -136,6 +137,10 @@ end
 * **base64** - Base64 encoding/decoding
 * **ai** - AI chat completions (OpenAI, Anthropic)
 * **email** - Send emails via Resend
+
+### LLM-Assisted Development
+
+Lunar provides an [`llms.txt`](https://llmstxt.org/) file at `/llms.txt` with the complete Lua API reference, including function signatures, parameters, and code examples. You can use this with any LLM-powered coding assistant to get accurate help when writing Lunar functions.
 
 ### Example: Counter Function
 
