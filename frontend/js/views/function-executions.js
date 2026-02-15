@@ -219,7 +219,7 @@ export const FunctionExecutions = {
               }),
             }),
             FunctionExecutions.executions.length === 0
-              ? m(CardContent, [
+              ? m(Table, [
                 m(TableEmpty, {
                   icon: "inbox",
                   message: t("executions.emptyState"),
