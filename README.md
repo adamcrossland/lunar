@@ -91,7 +91,7 @@ Then start the development environment with:
 make dev
 ```
 
-The API will be available at `http://localhost:3000` and the dashboard at `http://localhost:3000/`.
+The application will be available at `http://localhost:3000`.
 
 ### First-Time Setup
 
