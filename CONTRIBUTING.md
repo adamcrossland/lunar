@@ -25,15 +25,17 @@ There are a few things that I want to implement in the near future:
   - For this one, I want to introduce a bucket list interface where the user can list the files, view them, delete them, etc.
   - We offer a a new set of lua apis to interact with the blob storage.
 - In memory caching with automatic invalidation.
-- Cron scheduling for functions.
 - Job queues and background processing.
 - AI integration enhancements
   - Add support for more AI providers (Ollama, etc.).
 - Possibilty to manage the functions outside the admin application using a CLI tool or API calls.
 
 ### Very hard
-
 - Add support for functions written in WASM using wazero. (not sure)
   - We might need to be able to manage the functions outside the admin.
   - Error handling needs to be abstracted.
   - We need to define the WASM function interface.
+- LLM-powered function builder in the admin UI.
+  - A chatbot interface that helps users create and edit Lua functions through natural language.
+  - Uses the `llms.txt` API reference as context for accurate code generation.
+  - Should support multiple AI providers (OpenAI, Anthropic, etc.).
