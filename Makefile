@@ -4,10 +4,10 @@ BINARY_NAME=lunar
 BUILD_DIR=build
 
 # Frontend vendor dependency versions
-MITHRIL_VERSION=2.3.7
-MONACO_VERSION=0.54.0
+MITHRIL_VERSION=2.3.8
+MONACO_VERSION=0.55.1
 HIGHLIGHTJS_VERSION=11.11.1
-JASMINE_VERSION=5.4.0
+JASMINE_VERSION=6.0.1
 
 help:
 	@echo "Available targets:"
@@ -71,6 +71,8 @@ test-all: test test-e2e
 	@echo "Run 'make test-frontend' to open browser tests manually"
 
 vendor-js:
+	@echo "Cleaning old vendored JS dependencies..."
+	@rm -rf frontend/vendor/{mithril,monaco-editor,highlight.js,jasmine}
 	@echo "Downloading vendored JS dependencies..."
 	@mkdir -p frontend/vendor/{mithril,monaco-editor,highlight.js/styles,highlight.js/languages,jasmine}
 	@echo "Downloading Mithril.js $(MITHRIL_VERSION)..."

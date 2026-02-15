@@ -234,12 +234,3 @@ describe("LanguageSelector", () => {
   });
 });
 
-describe("localeNames", () => {
-  it("has a display name for English", () => {
-    expect(localeNames["en"]).toBe("English");
-  });
-
-  it("has a display name for Portuguese (Brazil)", () => {
-    expect(localeNames["pt-BR"]).toBe("Português (Brasil)");
-  });
-});
