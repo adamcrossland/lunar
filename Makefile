@@ -1,4 +1,4 @@
-.PHONY: build test lint clean run help dev install-tools fmt-frontend test-frontend test-e2e test-all vendor-js
+.PHONY: build test lint clean run help dev install-tools fmt-frontend test-frontend test-e2e test-all vendor-js docker
 
 BINARY_NAME=lunar
 BUILD_DIR=build
@@ -22,6 +22,7 @@ help:
 	@echo "  all           - Run lint, test, and build"
 	@echo "  fmt-frontend  - Format frontend JS files with deno fmt"
 	@echo "  vendor-js     - Download/update vendored JS dependencies"
+	@echo "  docker        - Run with Docker Compose"
 
 build:
 	@echo "Building..."
@@ -69,6 +70,10 @@ test-e2e:
 test-all: test test-e2e
 	@echo "All Go tests passed!"
 	@echo "Run 'make test-frontend' to open browser tests manually"
+
+docker:
+	@echo "Starting with Docker Compose..."
+	@docker compose up
 
 vendor-js:
 	@echo "Cleaning old vendored JS dependencies..."
