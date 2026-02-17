@@ -30,6 +30,12 @@ There are a few things that I want to implement in the near future:
   - Add support for more AI providers (Ollama, etc.).
 - Possibilty to manage the functions outside the admin application using a CLI tool or API calls.
 
+### Nice additions (non-code)
+
+- Create a documentation and marketing website for Lunar (inspired by [pocketbase.io](https://pocketbase.io/)).
+  - Landing page showcasing features, use cases, and getting started guides.
+  - Full documentation section covering installation, configuration, Lua API reference, and examples.
+
 ### Very hard
 - Add support for functions written in WASM using wazero. (not sure)
   - We might need to be able to manage the functions outside the admin.
