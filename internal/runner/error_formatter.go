@@ -103,7 +103,7 @@ func extractCodeContext(sourceCode string, lineNum, colNum, contextLines int) st
 		if i == lineNum-1 {
 			prefix = "> "
 		}
-		context.WriteString(fmt.Sprintf("%s%3d | %s\n", prefix, i+1, lines[i]))
+		fmt.Fprintf(&context, "%s%3d | %s\n", prefix, i+1, lines[i])
 
 		// Add arrow pointing to column if this is the error line and we have a column number
 		if i == lineNum-1 && colNum > 0 {
@@ -227,9 +227,9 @@ func formatEnhancedError(errMsg string, lineNum int, codeContext, suggestion str
 
 	// Error message
 	if lineNum > 0 {
-		msg.WriteString(fmt.Sprintf("Error at line %d: %s\n", lineNum, cleanErrorMessage(errMsg)))
+		fmt.Fprintf(&msg, "Error at line %d: %s\n", lineNum, cleanErrorMessage(errMsg))
 	} else {
-		msg.WriteString(fmt.Sprintf("Error: %s\n", cleanErrorMessage(errMsg)))
+		fmt.Fprintf(&msg, "Error: %s\n", cleanErrorMessage(errMsg))
 	}
 
 	// Code context with markers for frontend parsing
