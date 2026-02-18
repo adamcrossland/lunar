@@ -10,11 +10,6 @@ import (
 	"github.com/dimiro1/lunar/internal/store"
 )
 
-//go:fix inline
-func strPtr(s string) *string {
-	return new(s)
-}
-
 func TestGetNextRunFromSchedule(t *testing.T) {
 	tests := []struct {
 		name        string

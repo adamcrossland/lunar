@@ -349,20 +349,6 @@ func TestIsValidEnvVarKey(t *testing.T) {
 	}
 }
 
-// Helper function for creating string pointers
-//
-//go:fix inline
-func strPtr(s string) *string {
-	return new(s)
-}
-
-// Helper function for creating int pointers
-//
-//go:fix inline
-func intPtr(i int) *int {
-	return new(i)
-}
-
 func TestValidateRetentionDays(t *testing.T) {
 	tests := []struct {
 		name    string
@@ -655,13 +641,6 @@ func TestValidateUpdateFunctionRequest_WithSaveResponse(t *testing.T) {
 			}
 		})
 	}
-}
-
-// Helper function for creating bool pointers
-//
-//go:fix inline
-func boolPtr(b bool) *bool {
-	return new(b)
 }
 
 func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
