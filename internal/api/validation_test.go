@@ -26,7 +26,7 @@ func TestValidateCreateFunctionRequest(t *testing.T) {
 			name: "valid request with description",
 			req: &CreateFunctionRequest{
 				Name:        "test-function",
-				Description: strPtr("A test function"),
+				Description: new("A test function"),
 				Code:        "function handler() end",
 			},
 			wantErr: false,
@@ -95,7 +95,7 @@ func TestValidateCreateFunctionRequest(t *testing.T) {
 			name: "description too long",
 			req: &CreateFunctionRequest{
 				Name:        "test-function",
-				Description: strPtr(strings.Repeat("a", MaxDescriptionLength+1)),
+				Description: new(strings.Repeat("a", MaxDescriptionLength+1)),
 				Code:        "function handler() end",
 			},
 			wantErr: true,
@@ -127,23 +127,23 @@ func TestValidateUpdateFunctionRequest(t *testing.T) {
 		{
 			name: "valid request with name",
 			req: &store.UpdateFunctionRequest{
-				Name: strPtr("new-name"),
+				Name: new("new-name"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid request with code",
 			req: &store.UpdateFunctionRequest{
-				Code: strPtr("function handler() end"),
+				Code: new("function handler() end"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid request with all fields",
 			req: &store.UpdateFunctionRequest{
-				Name:        strPtr("new-name"),
-				Description: strPtr("new description"),
-				Code:        strPtr("function handler() end"),
+				Name:        new("new-name"),
+				Description: new("new description"),
+				Code:        new("function handler() end"),
 			},
 			wantErr: false,
 		},
@@ -162,7 +162,7 @@ func TestValidateUpdateFunctionRequest(t *testing.T) {
 		{
 			name: "invalid name",
 			req: &store.UpdateFunctionRequest{
-				Name: strPtr(""),
+				Name: new(""),
 			},
 			wantErr: true,
 			errMsg:  "name cannot be empty",
@@ -170,7 +170,7 @@ func TestValidateUpdateFunctionRequest(t *testing.T) {
 		{
 			name: "invalid code",
 			req: &store.UpdateFunctionRequest{
-				Code: strPtr(""),
+				Code: new(""),
 			},
 			wantErr: true,
 			errMsg:  "code cannot be empty",
@@ -294,7 +294,7 @@ func TestValidateUpdateEnvVarsRequest(t *testing.T) {
 			req: &UpdateEnvVarsRequest{
 				EnvVars: func() map[string]string {
 					m := make(map[string]string)
-					for i := 0; i < MaxEnvVars+1; i++ {
+					for i := range MaxEnvVars + 1 {
 						m[strings.Repeat("A", i%10+1)+string(rune(i))] = "value"
 					}
 					return m
@@ -350,13 +350,17 @@ func TestIsValidEnvVarKey(t *testing.T) {
 }
 
 // Helper function for creating string pointers
+//
+//go:fix inline
 func strPtr(s string) *string {
-	return &s
+	return new(s)
 }
 
 // Helper function for creating int pointers
+//
+//go:fix inline
 func intPtr(i int) *int {
-	return &i
+	return new(i)
 }
 
 func TestValidateRetentionDays(t *testing.T) {
@@ -448,21 +452,21 @@ func TestValidateUpdateFunctionRequest_WithRetentionDays(t *testing.T) {
 		{
 			name: "valid retention days 7",
 			req: &store.UpdateFunctionRequest{
-				RetentionDays: intPtr(7),
+				RetentionDays: new(7),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid retention days 30",
 			req: &store.UpdateFunctionRequest{
-				RetentionDays: intPtr(30),
+				RetentionDays: new(30),
 			},
 			wantErr: false,
 		},
 		{
 			name: "invalid retention days 5",
 			req: &store.UpdateFunctionRequest{
-				RetentionDays: intPtr(5),
+				RetentionDays: new(5),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -470,7 +474,7 @@ func TestValidateUpdateFunctionRequest_WithRetentionDays(t *testing.T) {
 		{
 			name: "invalid retention days 100",
 			req: &store.UpdateFunctionRequest{
-				RetentionDays: intPtr(100),
+				RetentionDays: new(100),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -478,16 +482,16 @@ func TestValidateUpdateFunctionRequest_WithRetentionDays(t *testing.T) {
 		{
 			name: "combined update with valid retention days",
 			req: &store.UpdateFunctionRequest{
-				Name:          strPtr("new-name"),
-				RetentionDays: intPtr(15),
+				Name:          new("new-name"),
+				RetentionDays: new(15),
 			},
 			wantErr: false,
 		},
 		{
 			name: "combined update with invalid retention days",
 			req: &store.UpdateFunctionRequest{
-				Name:          strPtr("new-name"),
-				RetentionDays: intPtr(20),
+				Name:          new("new-name"),
+				RetentionDays: new(20),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -518,49 +522,49 @@ func TestValidateUpdateFunctionRequest_WithCronSchedule(t *testing.T) {
 		{
 			name: "valid cron schedule - every 5 minutes",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("*/5 * * * *"),
+				CronSchedule: new("*/5 * * * *"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron schedule - every hour",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("0 * * * *"),
+				CronSchedule: new("0 * * * *"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron schedule - every day at midnight",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("0 0 * * *"),
+				CronSchedule: new("0 0 * * *"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron schedule - weekdays at 9am",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("0 9 * * 1-5"),
+				CronSchedule: new("0 9 * * 1-5"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron schedule - first day of month",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("0 0 1 * *"),
+				CronSchedule: new("0 0 1 * *"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid empty cron schedule (to clear)",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr(""),
+				CronSchedule: new(""),
 			},
 			wantErr: false,
 		},
 		{
 			name: "invalid cron schedule - too few fields",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("* * *"),
+				CronSchedule: new("* * *"),
 			},
 			wantErr: true,
 			errMsg:  "invalid cron expression",
@@ -568,7 +572,7 @@ func TestValidateUpdateFunctionRequest_WithCronSchedule(t *testing.T) {
 		{
 			name: "invalid cron schedule - too many fields",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("* * * * * *"),
+				CronSchedule: new("* * * * * *"),
 			},
 			wantErr: true,
 			errMsg:  "invalid cron expression",
@@ -576,7 +580,7 @@ func TestValidateUpdateFunctionRequest_WithCronSchedule(t *testing.T) {
 		{
 			name: "invalid cron schedule - bad minute value",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("60 * * * *"),
+				CronSchedule: new("60 * * * *"),
 			},
 			wantErr: true,
 			errMsg:  "invalid cron expression",
@@ -584,7 +588,7 @@ func TestValidateUpdateFunctionRequest_WithCronSchedule(t *testing.T) {
 		{
 			name: "invalid cron schedule - bad hour value",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("* 25 * * *"),
+				CronSchedule: new("* 25 * * *"),
 			},
 			wantErr: true,
 			errMsg:  "invalid cron expression",
@@ -592,7 +596,7 @@ func TestValidateUpdateFunctionRequest_WithCronSchedule(t *testing.T) {
 		{
 			name: "invalid cron schedule - invalid syntax",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("not a cron"),
+				CronSchedule: new("not a cron"),
 			},
 			wantErr: true,
 			errMsg:  "invalid cron expression",
@@ -622,22 +626,22 @@ func TestValidateUpdateFunctionRequest_WithSaveResponse(t *testing.T) {
 		{
 			name: "valid save_response true",
 			req: &store.UpdateFunctionRequest{
-				SaveResponse: boolPtr(true),
+				SaveResponse: new(true),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid save_response false",
 			req: &store.UpdateFunctionRequest{
-				SaveResponse: boolPtr(false),
+				SaveResponse: new(false),
 			},
 			wantErr: false,
 		},
 		{
 			name: "combined update with save_response",
 			req: &store.UpdateFunctionRequest{
-				Name:         strPtr("new-name"),
-				SaveResponse: boolPtr(true),
+				Name:         new("new-name"),
+				SaveResponse: new(true),
 			},
 			wantErr: false,
 		},
@@ -654,8 +658,10 @@ func TestValidateUpdateFunctionRequest_WithSaveResponse(t *testing.T) {
 }
 
 // Helper function for creating bool pointers
+//
+//go:fix inline
 func boolPtr(b bool) *bool {
-	return &b
+	return new(b)
 }
 
 func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
@@ -668,21 +674,21 @@ func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
 		{
 			name: "valid cron status - active",
 			req: &store.UpdateFunctionRequest{
-				CronStatus: strPtr("active"),
+				CronStatus: new("active"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron status - paused",
 			req: &store.UpdateFunctionRequest{
-				CronStatus: strPtr("paused"),
+				CronStatus: new("paused"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "invalid cron status - stopped",
 			req: &store.UpdateFunctionRequest{
-				CronStatus: strPtr("stopped"),
+				CronStatus: new("stopped"),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -690,7 +696,7 @@ func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
 		{
 			name: "invalid cron status - enabled",
 			req: &store.UpdateFunctionRequest{
-				CronStatus: strPtr("enabled"),
+				CronStatus: new("enabled"),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -698,7 +704,7 @@ func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
 		{
 			name: "invalid cron status - empty",
 			req: &store.UpdateFunctionRequest{
-				CronStatus: strPtr(""),
+				CronStatus: new(""),
 			},
 			wantErr: true,
 			errMsg:  "must be one of",
@@ -706,16 +712,16 @@ func TestValidateUpdateFunctionRequest_WithCronStatus(t *testing.T) {
 		{
 			name: "valid combined cron schedule and status",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("*/5 * * * *"),
-				CronStatus:   strPtr("active"),
+				CronSchedule: new("*/5 * * * *"),
+				CronStatus:   new("active"),
 			},
 			wantErr: false,
 		},
 		{
 			name: "valid cron schedule with paused status",
 			req: &store.UpdateFunctionRequest{
-				CronSchedule: strPtr("0 * * * *"),
-				CronStatus:   strPtr("paused"),
+				CronSchedule: new("0 * * * *"),
+				CronStatus:   new("paused"),
 			},
 			wantErr: false,
 		},

@@ -3,6 +3,7 @@ package ai
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	internalhttp "github.com/dimiro1/lunar/internal/services/http"
 )
@@ -80,15 +81,15 @@ func (anthropicProvider) parseResponse(body string) (*ChatResponse, error) {
 	}
 
 	// Concatenate all text content
-	var content string
+	var content strings.Builder
 	for _, c := range resp.Content {
 		if c.Type == "text" {
-			content += c.Text
+			content.WriteString(c.Text)
 		}
 	}
 
 	return &ChatResponse{
-		Content: content,
+		Content: content.String(),
 		Model:   resp.Model,
 		Usage: Usage{
 			InputTokens:  resp.Usage.InputTokens,

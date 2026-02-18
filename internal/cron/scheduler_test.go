@@ -10,8 +10,9 @@ import (
 	"github.com/dimiro1/lunar/internal/store"
 )
 
+//go:fix inline
 func strPtr(s string) *string {
-	return &s
+	return new(s)
 }
 
 func TestGetNextRunFromSchedule(t *testing.T) {
@@ -198,8 +199,8 @@ func TestFunctionScheduler_LoadSchedules(t *testing.T) {
 	_, err := db.CreateFunction(ctx, store.Function{
 		ID:           "func-1",
 		Name:         "test-function",
-		CronSchedule: strPtr("*/5 * * * *"),
-		CronStatus:   strPtr("active"),
+		CronSchedule: new("*/5 * * * *"),
+		CronStatus:   new("active"),
 	})
 	if err != nil {
 		t.Fatalf("CreateFunction() failed: %v", err)
@@ -250,8 +251,8 @@ func TestFunctionScheduler_RefreshFunction(t *testing.T) {
 
 	// Update the function with cron schedule
 	err = db.UpdateFunction(ctx, "func-1", store.UpdateFunctionRequest{
-		CronSchedule: strPtr("*/5 * * * *"),
-		CronStatus:   strPtr("active"),
+		CronSchedule: new("*/5 * * * *"),
+		CronStatus:   new("active"),
 	})
 	if err != nil {
 		t.Fatalf("UpdateFunction() failed: %v", err)
@@ -272,7 +273,7 @@ func TestFunctionScheduler_RefreshFunction(t *testing.T) {
 
 	// Pause the schedule
 	err = db.UpdateFunction(ctx, "func-1", store.UpdateFunctionRequest{
-		CronStatus: strPtr("paused"),
+		CronStatus: new("paused"),
 	})
 	if err != nil {
 		t.Fatalf("UpdateFunction() failed: %v", err)
@@ -300,8 +301,8 @@ func TestFunctionScheduler_GetNextRun(t *testing.T) {
 	_, err := db.CreateFunction(ctx, store.Function{
 		ID:           "func-1",
 		Name:         "test-function",
-		CronSchedule: strPtr("* * * * *"), // Every minute
-		CronStatus:   strPtr("active"),
+		CronSchedule: new("* * * * *"), // Every minute
+		CronStatus:   new("active"),
 	})
 	if err != nil {
 		t.Fatalf("CreateFunction() failed: %v", err)
@@ -358,8 +359,8 @@ func TestFunctionScheduler_ExecuteFunction_Headers(t *testing.T) {
 	_, err := db.CreateFunction(ctx, store.Function{
 		ID:           "func-1",
 		Name:         "test-function",
-		CronSchedule: strPtr("* * * * *"), // Every minute - but we'll call directly
-		CronStatus:   strPtr("active"),
+		CronSchedule: new("* * * * *"), // Every minute - but we'll call directly
+		CronStatus:   new("active"),
 	})
 	if err != nil {
 		t.Fatalf("CreateFunction() failed: %v", err)

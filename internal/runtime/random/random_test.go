@@ -9,7 +9,7 @@ import (
 
 func TestInt(t *testing.T) {
 	t.Run("valid range", func(t *testing.T) {
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			result, err := Int(1, 10)
 			if err != nil {
 				t.Fatalf("Int(1, 10) returned error: %v", err)
@@ -38,7 +38,7 @@ func TestInt(t *testing.T) {
 	})
 
 	t.Run("negative range", func(t *testing.T) {
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			result, err := Int(-10, -1)
 			if err != nil {
 				t.Fatalf("Int(-10, -1) returned error: %v", err)
@@ -51,7 +51,7 @@ func TestInt(t *testing.T) {
 }
 
 func TestFloat(t *testing.T) {
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		result := Float()
 		if result < 0.0 || result >= 1.0 {
 			t.Errorf("Float() = %f, want 0.0 <= x < 1.0", result)
@@ -91,7 +91,7 @@ func TestString(t *testing.T) {
 
 	t.Run("uniqueness", func(t *testing.T) {
 		seen := make(map[string]bool)
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			s, _ := String(32)
 			if seen[s] {
 				t.Errorf("String(32) produced duplicate: %s", s)
@@ -166,7 +166,7 @@ func TestID(t *testing.T) {
 
 	t.Run("uniqueness", func(t *testing.T) {
 		seen := make(map[string]bool)
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			id := ID()
 			if seen[id] {
 				t.Errorf("ID() produced duplicate: %s", id)

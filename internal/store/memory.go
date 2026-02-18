@@ -88,10 +88,7 @@ func (db *MemoryDB) ListFunctions(_ context.Context, params PaginationParams) ([
 		return []FunctionWithActiveVersion{}, total, nil
 	}
 
-	end := start + params.Limit
-	if end > len(allFunctions) {
-		end = len(allFunctions)
-	}
+	end := min(start+params.Limit, len(allFunctions))
 
 	return allFunctions[start:end], total, nil
 }
@@ -234,10 +231,7 @@ func (db *MemoryDB) ListVersions(_ context.Context, functionID string, params Pa
 		return []FunctionVersion{}, total, nil
 	}
 
-	end := start + params.Limit
-	if end > len(allVersions) {
-		end = len(allVersions)
-	}
+	end := min(start+params.Limit, len(allVersions))
 
 	return allVersions[start:end], total, nil
 }

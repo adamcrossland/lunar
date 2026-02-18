@@ -37,7 +37,7 @@ func TestCompare_AddedLines(t *testing.T) {
 	}
 
 	// First two lines should be unchanged
-	for i := 0; i < 2; i++ {
+	for i := range 2 {
 		if result.Lines[i].Type != LineTypeUnchanged {
 			t.Errorf("line %d: expected unchanged, got %s", i, result.Lines[i].Type)
 		}
@@ -66,7 +66,7 @@ func TestCompare_RemovedLines(t *testing.T) {
 	}
 
 	// First two lines should be unchanged
-	for i := 0; i < 2; i++ {
+	for i := range 2 {
 		if result.Lines[i].Type != LineTypeUnchanged {
 			t.Errorf("line %d: expected unchanged, got %s", i, result.Lines[i].Type)
 		}

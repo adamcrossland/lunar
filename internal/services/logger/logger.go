@@ -3,6 +3,7 @@ package logger
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -182,12 +183,12 @@ func (m *MemoryLogger) String() string {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	result := ""
+	var result strings.Builder
 	for _, entry := range m.entries {
 		timestamp := time.Unix(entry.Timestamp, 0).Format("2006-01-02 15:04:05")
-		result += fmt.Sprintf("[%s] [%s] %s: %s\n", timestamp, entry.ExecutionID, entry.Level, entry.Message)
+		result.WriteString(fmt.Sprintf("[%s] [%s] %s: %s\n", timestamp, entry.ExecutionID, entry.Level, entry.Message))
 	}
-	return result
+	return result.String()
 }
 
 // SQLiteLogger is a SQLite-backed implementation of Logger

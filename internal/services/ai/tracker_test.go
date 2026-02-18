@@ -134,7 +134,7 @@ func TestMemoryTracker_RequestsPaginated(t *testing.T) {
 	tracker := NewMemoryTracker()
 
 	// Add 5 requests
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		req := TrackRequest{Provider: "openai", Model: "gpt-4", Status: store.AIRequestStatusSuccess}
 		tracker.Track("exec-1", req)
 	}
@@ -221,7 +221,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	done := make(chan bool)
 
 	// Concurrent writes
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		go func() {
 			req := TrackRequest{Provider: "openai", Model: "gpt-4", Status: store.AIRequestStatusSuccess}
 			tracker.Track("exec-1", req)
@@ -230,7 +230,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	}
 
 	// Concurrent reads
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		go func() {
 			_ = tracker.Requests("exec-1")
 			done <- true
@@ -238,7 +238,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	}
 
 	// Wait for all goroutines
-	for i := 0; i < 20; i++ {
+	for range 20 {
 		<-done
 	}
 

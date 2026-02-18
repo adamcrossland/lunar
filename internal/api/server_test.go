@@ -1228,7 +1228,7 @@ end
 				t.Fatal("Expected EventJSON to be stored")
 			}
 
-			var eventData map[string]interface{}
+			var eventData map[string]any
 			if err := json.Unmarshal([]byte(*execution.EventJSON), &eventData); err != nil {
 				t.Fatalf("Failed to parse event JSON: %v", err)
 			}

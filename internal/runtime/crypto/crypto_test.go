@@ -112,7 +112,7 @@ func TestHMACSHA512(t *testing.T) {
 func TestUUID(t *testing.T) {
 	uuidRegex := regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`)
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		result := UUID()
 		if !uuidRegex.MatchString(result) {
 			t.Errorf("UUID() = %q, not a valid UUID v4", result)
@@ -121,7 +121,7 @@ func TestUUID(t *testing.T) {
 
 	// Test uniqueness
 	seen := make(map[string]bool)
-	for i := 0; i < 100; i++ {
+	for range 100 {
 		u := UUID()
 		if seen[u] {
 			t.Errorf("UUID() produced duplicate: %s", u)

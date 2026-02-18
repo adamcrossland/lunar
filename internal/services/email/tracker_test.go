@@ -262,7 +262,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	done := make(chan bool)
 
 	// Concurrent writes
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		go func() {
 			req := TrackRequest{From: "sender@example.com", To: []string{"recipient@example.com"}, Subject: "Test", Status: store.EmailRequestStatusSuccess}
 			tracker.Track("exec-1", req)
@@ -271,7 +271,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	}
 
 	// Concurrent reads
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		go func() {
 			_ = tracker.Requests("exec-1")
 			done <- true
@@ -279,7 +279,7 @@ func TestMemoryTracker_ConcurrentAccess(t *testing.T) {
 	}
 
 	// Wait for all goroutines
-	for i := 0; i < 20; i++ {
+	for range 20 {
 		<-done
 	}
 
