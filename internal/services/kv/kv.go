@@ -21,6 +21,9 @@ type Store interface {
 	Get(functionID, key string) (string, error)
 	Set(functionID, key, value string) error
 	Delete(functionID, key string) error
+	GetGlobal(key string) (string, error)
+	SetGlobal(key, value string) error
+	DeleteGlobal(key string) error
 }
 
 // MemoryStore is an in-memory implementation of Store
@@ -35,7 +38,6 @@ func NewMemoryStore() *MemoryStore {
 	}
 }
 
-// Get retrieves a value by functionID and key
 func (m *MemoryStore) Get(functionID, key string) (string, error) {
 	ns, exists := m.data[functionID]
 	if !exists {
@@ -64,6 +66,33 @@ func (m *MemoryStore) Delete(functionID, key string) error {
 		delete(ns, key)
 	}
 	return nil
+}
+
+// GetGlobal retrieves a value from the global key-value store
+func (m *MemoryStore) GetGlobal(key string) (string, error) {
+	if key == "" {
+		return "", &Error{Message: "key cannot be empty"}
+	}
+
+	return m.Get("", key)
+}
+
+// SetGlobal sets a value in the global key-value store
+func (m *MemoryStore) SetGlobal(key, value string) error {
+	if key == "" {
+		return &Error{Message: "key cannot be empty"}
+	}
+
+	return m.Set("", key, value)
+}
+
+// DeleteGlobal removes a key-value pair from the global key-value store
+func (m *MemoryStore) DeleteGlobal(key string) error {
+	if key == "" {
+		return &Error{Message: "key cannot be empty"}
+	}
+
+	return m.Delete("", key)
 }
 
 // SQLiteStore is a SQLite-backed implementation of Store
@@ -116,4 +145,31 @@ func (s *SQLiteStore) Delete(functionID, key string) error {
 		return fmt.Errorf("failed to delete value: %w", err)
 	}
 	return nil
+}
+
+// GetGlobal retrieves a value from the global key-value store
+func (s *SQLiteStore) GetGlobal(key string) (string, error) {
+	if key == "" {
+		return "", &Error{Message: "key cannot be empty"}
+	}
+
+	return s.Get("", key)
+}
+
+// SetGlobal sets a value in the global key-value store
+func (s *SQLiteStore) SetGlobal(key, value string) error {
+	if key == "" {
+		return &Error{Message: "key cannot be empty"}
+	}
+
+	return s.Set("", key, value)
+}
+
+// DeleteGlobal removes a key-value pair from the global key-value store
+func (s *SQLiteStore) DeleteGlobal(key string) error {
+	if key == "" {
+		return &Error{Message: "key cannot be empty"}
+	}
+
+	return s.Delete("", key)
 }

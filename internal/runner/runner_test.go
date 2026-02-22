@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dimiro1/lunar/internal/services/env"
 	"github.com/dimiro1/lunar/internal/events"
+	"github.com/dimiro1/lunar/internal/services/env"
 	internalhttp "github.com/dimiro1/lunar/internal/services/http"
 	"github.com/dimiro1/lunar/internal/services/kv"
 	"github.com/dimiro1/lunar/internal/services/logger"
@@ -284,6 +284,30 @@ end
 	}
 	if val != "value1" {
 		t.Errorf("expected value 'value1', got %q", val)
+	}
+
+	// Test with named store
+	luaCodeNamed := `
+function handler(ctx, event)
+	kv.set("key1", "value1") -- This should go to the default store
+	kv.setGlobal("key1", "value2") -- This should go to the global store
+	local val = kv.get("key1") -- Should retrieve from default store
+	local globalVal = kv.getGlobal("key1") -- Should retrieve from global store
+
+	return {
+		statusCode = 200,
+		body = "Retrieved: " .. val .. ", " .. globalVal
+	}
+end
+`
+
+	resp, err = Run(context.Background(), deps, Request{Context: execCtx, Event: event, Code: luaCodeNamed})
+	if err != nil {
+		t.Fatalf("Run failed: %v", err)
+	}
+
+	if resp.HTTP.Body != "Retrieved: value1, value2" {
+		t.Errorf("expected body 'Retrieved: value1, value2', got %q", resp.HTTP.Body)
 	}
 }
 

@@ -134,6 +134,39 @@ func TestSQLiteStore_DeleteNonExistent(t *testing.T) {
 	}
 }
 
+func TestSQLiteStore_GetAndSetWithGlobalStore(t *testing.T) {
+	db := setupTestDB(t)
+	store := NewSQLiteStore(db)
+
+	// Set a value in the global store.
+	err := store.SetGlobal("key1", "value1")
+	if err != nil {
+		t.Fatalf("Failed to set value in global store: %v", err)
+	}
+
+	// Get the value from the global store.
+	value, err := store.GetGlobal("key1")
+	if err != nil {
+		t.Fatalf("Failed to get value from global store: %v", err)
+	}
+
+	if value != "value1" {
+		t.Errorf("Expected value 'value1' from global store, got '%s'", value)
+	}
+
+	// Delete a key from the global store
+	err = store.DeleteGlobal("key1")
+	if err != nil {
+		t.Errorf("Expected no error for deleting key from global store, got %v", err)
+	}
+
+	// Delete a non-existent key from the global store
+	err = store.DeleteGlobal("key1")
+	if err != nil {
+		t.Errorf("Expected no error for deleting key from global store, got %v", err)
+	}
+}
+
 func TestSQLiteStore_FunctionIsolation(t *testing.T) {
 	db := setupTestDB(t)
 	store := NewSQLiteStore(db)
