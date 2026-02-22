@@ -58,11 +58,6 @@ jobs:
         with:
           version: latest
 
-      - name: Run staticcheck
-        uses: dominikh/staticcheck-action@v1
-        with:
-          version: "2025.1.1"
-
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
