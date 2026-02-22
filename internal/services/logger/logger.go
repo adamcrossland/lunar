@@ -186,7 +186,7 @@ func (m *MemoryLogger) String() string {
 	var result strings.Builder
 	for _, entry := range m.entries {
 		timestamp := time.Unix(entry.Timestamp, 0).Format("2006-01-02 15:04:05")
-		result.WriteString(fmt.Sprintf("[%s] [%s] %s: %s\n", timestamp, entry.ExecutionID, entry.Level, entry.Message))
+		fmt.Fprintf(&result, "[%s] [%s] %s: %s\n", timestamp, entry.ExecutionID, entry.Level, entry.Message)
 	}
 	return result.String()
 }
