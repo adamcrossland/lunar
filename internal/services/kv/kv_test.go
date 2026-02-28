@@ -3,6 +3,7 @@ package kv
 import (
 	"database/sql"
 	"os"
+	"sort"
 	"testing"
 
 	"github.com/dimiro1/lunar/internal/migrate"
@@ -222,5 +223,83 @@ func TestSQLiteStore_FunctionIsolation(t *testing.T) {
 	_, err = store.Get("func-123", "key")
 	if err == nil {
 		t.Error("Expected error for deleted key in func-123, got nil")
+	}
+}
+
+func TestSQLiteStore_ListKeys(t *testing.T) {
+	db := setupTestDB(t)
+	store := NewSQLiteStore(db)
+
+	fake_functionID := "testing-list-keys-testonly"
+
+	foundKeys, err := store.ListKeys(fake_functionID)
+	if err != nil {
+		t.Fatalf("ListKeys failed: %v", err)
+	}
+	if len(foundKeys) != 0 {
+		t.Errorf("expected empty store but it was populated: %v", foundKeys)
+	}
+
+	// Add some keys to the store
+	err = store.Set(fake_functionID, "key1", "value1")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = store.Set(fake_functionID, "key2", "value2")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = store.Set(fake_functionID, "key3", "value3")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = store.Set(fake_functionID, "key4", "value4")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+
+	foundKeys, err = store.ListKeys(fake_functionID)
+	if err != nil {
+		t.Fatalf("ListKeys failed: %v", err)
+	}
+	sort.Strings(foundKeys)
+	if len(foundKeys) != 4 || foundKeys[0] != "key1" || foundKeys[1] != "key2" || foundKeys[2] != "key3" || foundKeys[3] != "key4" {
+		t.Errorf("expected keys ['key1', 'key2', 'key3', 'key4'], got %v", foundKeys)
+	}
+
+	// Delete a key and check the list again
+	err = store.Delete(fake_functionID, "key2")
+	if err != nil {
+		t.Fatalf("Delete failed: %v", err)
+	}
+	foundKeys, err = store.ListKeys(fake_functionID)
+	if err != nil {
+		t.Fatalf("ListKeys failed: %v", err)
+	}
+	sort.Strings(foundKeys)
+	if len(foundKeys) != 3 || foundKeys[0] != "key1" || foundKeys[1] != "key3" || foundKeys[2] != "key4" {
+		t.Errorf("expected keys ['key1', 'key3', 'key4'], got %v", foundKeys)
+	}
+
+	// Delete all keys and check the list again
+	err = store.Delete(fake_functionID, "key1")
+	if err != nil {
+		t.Fatalf("Delete failed: %v", err)
+	}
+	err = store.Delete(fake_functionID, "key3")
+	if err != nil {
+		t.Fatalf("Delete failed: %v", err)
+	}
+	err = store.Delete(fake_functionID, "key4")
+	if err != nil {
+		t.Fatalf("Delete failed: %v", err)
+	}
+
+	foundKeys, err = store.ListKeys(fake_functionID)
+	if err != nil {
+		t.Fatalf("ListKeys failed: %v", err)
+	}
+	if len(foundKeys) != 0 {
+		t.Errorf("expected empty store but it was populated: %v", foundKeys)
 	}
 }

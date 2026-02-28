@@ -583,6 +583,44 @@ end
 	}
 }
 
+func TestRun_KV_ListKeys(t *testing.T) {
+	kvStore := kv.NewMemoryStore()
+
+	keysList, err := kvStore.ListKeys("function-1")
+	if err == nil {
+		t.Fatalf("ListKeys should have returned an error for non-existent function store, got nil")
+	}
+	if len(keysList) != 0 {
+		t.Errorf("expected empty store but it was populated")
+	}
+
+	// Add some keys to function-1 store
+	err = kvStore.Set("function-1", "a-key-1", "another-value-1")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = kvStore.Set("function-1", "a-key-2", "another-value-2")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = kvStore.Set("function-1", "a-key-3", "another-value-3")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+	err = kvStore.Set("function-1", "a-key-4", "another-value-4")
+	if err != nil {
+		t.Fatalf("Set failed: %v", err)
+	}
+
+	keysList, err = kvStore.ListKeys("function-1")
+	if err != nil {
+		t.Fatalf("ListKeys failed: %v", err)
+	}
+	if len(keysList) != 4 || keysList[0] != "a-key-1" || keysList[1] != "a-key-2" || keysList[2] != "a-key-3" || keysList[3] != "a-key-4" {
+		t.Errorf("expected keys ['a-key-1', 'a-key-2', 'a-key-3', 'a-key-4'], got %v", keysList)
+	}
+}
+
 func TestRun_JSON_Decode(t *testing.T) {
 	deps := Dependencies{
 		Logger: logger.NewMemoryLogger(),
