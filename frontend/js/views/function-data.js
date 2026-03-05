@@ -23,9 +23,7 @@ import {
 import { TabContent, Tabs } from "../components/tabs.js";
 import { getFunctionTabs } from "../utils.js";
 import { routes } from "../routes.js";
-import {
-  FormHelp,
-} from "../components/form.js";
+import { FormHelp } from "../components/form.js";
 import { DataEditor } from "../components/data-editor.js";
 /**
  * @typedef {import('../types.js').LunarFunction} LunarFunction
@@ -68,17 +66,17 @@ export const FunctionData = {
    * @type {StoreItem[]}
    */
   globalStoreItems: [],
-  
+
   /**
    * Initializes the view and loads the function.
    * @param {Object} vnode - Mithril vnode
    */
   oninit: (vnode) => {
-      FunctionData.scopedStoreItems = [];
-      FunctionData.globalStoreItems = [];
-      FunctionData.scopedDataErrors = {};
-      FunctionData.globalDataErrors = {};
-      FunctionData.loadFunction(vnode.attrs.id);
+    FunctionData.scopedStoreItems = [];
+    FunctionData.globalStoreItems = [];
+    FunctionData.scopedDataErrors = {};
+    FunctionData.globalDataErrors = {};
+    FunctionData.loadFunction(vnode.attrs.id);
   },
 
   /**
@@ -133,8 +131,8 @@ export const FunctionData = {
     return (
       FunctionData.globalStoreItems.some((v) => v.state !== "original")
     );
- },
-  
+  },
+
   /**
    * Saves function-scoped or global key-value changes to the API.
    * @returns {Promise<void>}
@@ -142,35 +140,40 @@ export const FunctionData = {
   saveStoreChanges: async (isGlobal) => {
     FunctionData.scopedDataErrors = {};
     FunctionData.globalDataErrors = {};
-      
+
     try {
-        const entries = [];
-        let checkedEntries = isGlobal ? FunctionData.globalStoreItems : FunctionData.scopedStoreItems;
+      const entries = [];
+      let checkedEntries = isGlobal
+        ? FunctionData.globalStoreItems
+        : FunctionData.scopedStoreItems;
 
-        checkedEntries.forEach((entry) => {
-            if (entry.state !== "removed") {
-                const key = entry.key || "";
-                const value = entry.value || "";
-                if (key || value) {
-                    entries.push({ key: key, value: value });
-                }
-            }
-        });
+      checkedEntries.forEach((entry) => {
+        if (entry.state !== "removed") {
+          const key = entry.key || "";
+          const value = entry.value || "";
+          if (key || value) {
+            entries.push({ key: key, value: value });
+          }
+        }
+      });
 
-      await API.functions.updateKvStore(FunctionData.func.id, { global: isGlobal, kvEntries: entries });
+      await API.functions.updateKvStore(FunctionData.func.id, {
+        global: isGlobal,
+        kvEntries: entries,
+      });
 
       Toast.show(t("toast.kvSaved"), "success");
       await FunctionData.loadFunction(FunctionData.func.id);
     } catch (e) {
-        if (isGlobal) {
-            FunctionData.globalDataErrors.general = e.message;
-        } else {
-            FunctionData.scopedDataErrors.general = e.message;
-        }
-        m.redraw();
+      if (isGlobal) {
+        FunctionData.globalDataErrors.general = e.message;
+      } else {
+        FunctionData.scopedDataErrors.general = e.message;
+      }
+      m.redraw();
     }
   },
-  
+
   /**
    * Checks if there are unsaved status changes.
    * @returns {boolean} True if there are changes
@@ -361,7 +364,7 @@ export const FunctionData = {
                 t("common.saveChanges"),
               ),
             ]),
-          ])
+          ]),
         ]),
       ]),
     ]);

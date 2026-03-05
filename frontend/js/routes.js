@@ -65,7 +65,7 @@ export const routes = {
    * @returns {string} Route URL
    */
   functionData: (id) => `#!/functions/${id}/kv`,
-  
+
   /**
    * Version diff comparison page.
    * @param {string} id - Function ID
@@ -163,7 +163,7 @@ export const paths = {
    * @returns {string} Path
    */
   functionData: (id) => `/functions/${id}/kv`,
-  
+
   /**
    * Version diff comparison page.
    * @param {string} id - Function ID

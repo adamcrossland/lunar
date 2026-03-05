@@ -130,7 +130,8 @@ const API_DOCS = {
   "kv.getGlobal": {
     signature: "kv.getGlobal(key: string): string | nil",
     snippet: 'kv.getGlobal("${1:key}")',
-    description: "Get a value from the global key-value store. Returns nil if key does not exist.",
+    description:
+      "Get a value from the global key-value store. Returns nil if key does not exist.",
   },
   "kv.setGlobal": {
     signature: "kv.setGlobal(key: string, value: string)",
@@ -141,7 +142,7 @@ const API_DOCS = {
     signature: "kv.deleteGlobal(key: string)",
     snippet: 'kv.deleteGlobal("${1:key}")',
     description: "Delete a key from the global store",
-    },
+  },
   "kv.listGlobalKeys": {
     signature: "kv.listGlobalKeys(): table",
     snippet: "kv.listGlobalKeys()",

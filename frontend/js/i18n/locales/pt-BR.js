@@ -125,7 +125,7 @@ export default {
     valuePlaceholder: "Valor",
     variablesCount: "{{count}} entradas",
   },
-    
+
   // Settings page
   settings: {
     generalConfig: "Configuração Geral",

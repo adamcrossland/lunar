@@ -113,7 +113,7 @@ export default {
     },
   },
 
-kvStore: {
+  kvStore: {
     title: "Key-Value Store",
     functionScoped: "Function-Scoped",
     global: "Global",
@@ -123,7 +123,7 @@ kvStore: {
     keyPlaceholder: "KEY",
     valuePlaceholder: "Value",
     variablesCount: "{{count}} entries",
-    },
+  },
 
   // Settings page
   settings: {

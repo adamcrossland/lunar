@@ -186,7 +186,7 @@ export const API = {
         url: `/api/functions/${id}/kv`,
         body: updateData,
       }),
-    
+
     /**
      * Gets the next scheduled run time for a function.
      * @param {string} id - Function ID
