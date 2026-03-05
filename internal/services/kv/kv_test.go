@@ -230,9 +230,9 @@ func TestSQLiteStore_ListKeys(t *testing.T) {
 	db := setupTestDB(t)
 	store := NewSQLiteStore(db)
 
-	fake_functionID := "testing-list-keys-testonly"
+	fakeFunctionID := "testing-list-keys-testonly"
 
-	foundKeys, err := store.ListKeys(fake_functionID)
+	foundKeys, err := store.ListKeys(fakeFunctionID)
 	if err != nil {
 		t.Fatalf("ListKeys failed: %v", err)
 	}
@@ -241,24 +241,24 @@ func TestSQLiteStore_ListKeys(t *testing.T) {
 	}
 
 	// Add some keys to the store
-	err = store.Set(fake_functionID, "key1", "value1")
+	err = store.Set(fakeFunctionID, "key1", "value1")
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
-	err = store.Set(fake_functionID, "key2", "value2")
+	err = store.Set(fakeFunctionID, "key2", "value2")
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
-	err = store.Set(fake_functionID, "key3", "value3")
+	err = store.Set(fakeFunctionID, "key3", "value3")
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
-	err = store.Set(fake_functionID, "key4", "value4")
+	err = store.Set(fakeFunctionID, "key4", "value4")
 	if err != nil {
 		t.Fatalf("Set failed: %v", err)
 	}
 
-	foundKeys, err = store.ListKeys(fake_functionID)
+	foundKeys, err = store.ListKeys(fakeFunctionID)
 	if err != nil {
 		t.Fatalf("ListKeys failed: %v", err)
 	}
@@ -268,11 +268,11 @@ func TestSQLiteStore_ListKeys(t *testing.T) {
 	}
 
 	// Delete a key and check the list again
-	err = store.Delete(fake_functionID, "key2")
+	err = store.Delete(fakeFunctionID, "key2")
 	if err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
-	foundKeys, err = store.ListKeys(fake_functionID)
+	foundKeys, err = store.ListKeys(fakeFunctionID)
 	if err != nil {
 		t.Fatalf("ListKeys failed: %v", err)
 	}
@@ -282,7 +282,7 @@ func TestSQLiteStore_ListKeys(t *testing.T) {
 	}
 
 	// Test retrieving all entries and verify keys match
-	allEntries, err := store.All(fake_functionID)
+	allEntries, err := store.All(fakeFunctionID)
 	if err != nil {
 		t.Fatalf("All failed: %v", err)
 	}
@@ -303,20 +303,20 @@ func TestSQLiteStore_ListKeys(t *testing.T) {
 	}
 
 	// Delete all keys and check the list again
-	err = store.Delete(fake_functionID, "key1")
+	err = store.Delete(fakeFunctionID, "key1")
 	if err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
-	err = store.Delete(fake_functionID, "key3")
+	err = store.Delete(fakeFunctionID, "key3")
 	if err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
-	err = store.Delete(fake_functionID, "key4")
+	err = store.Delete(fakeFunctionID, "key4")
 	if err != nil {
 		t.Fatalf("Delete failed: %v", err)
 	}
 
-	foundKeys, err = store.ListKeys(fake_functionID)
+	foundKeys, err = store.ListKeys(fakeFunctionID)
 	if err != nil {
 		t.Fatalf("ListKeys failed: %v", err)
 	}
