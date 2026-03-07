@@ -3,6 +3,7 @@ package runner
 import (
 	"context"
 	"encoding/json"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -616,6 +617,7 @@ func TestRun_KV_ListKeys(t *testing.T) {
 	if err != nil {
 		t.Fatalf("ListKeys failed: %v", err)
 	}
+	sort.Strings(keysList)
 	if len(keysList) != 4 || keysList[0] != "a-key-1" || keysList[1] != "a-key-2" || keysList[2] != "a-key-3" || keysList[3] != "a-key-4" {
 		t.Errorf("expected keys ['a-key-1', 'a-key-2', 'a-key-3', 'a-key-4'], got %v", keysList)
 	}
