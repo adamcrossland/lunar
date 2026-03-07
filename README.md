@@ -206,6 +206,9 @@ curl -X GET http://localhost:3000/fn/{function-id}?name=John
 ### Docker
 
 ```bash
+# Run the latest release from Docker Hub
+docker run -p 3000:3000 -v $(pwd)/data:/data dimiro1/lunar:latest
+
 # Build and run with Docker
 docker build -t lunar .
 docker run -p 3000:3000 -v lunar-data:/app/data lunar
