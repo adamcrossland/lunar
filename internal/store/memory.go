@@ -15,6 +15,7 @@ type MemoryDB struct {
 	functions  map[string]Function
 	versions   map[string][]FunctionVersion // functionID -> versions
 	executions map[string]Execution         // id -> execution
+	blobs      map[string]Blob              // id -> blob
 }
 
 // NewMemoryDB creates a new in-memory database
@@ -23,6 +24,7 @@ func NewMemoryDB() *MemoryDB {
 		functions:  make(map[string]Function),
 		versions:   make(map[string][]FunctionVersion),
 		executions: make(map[string]Execution),
+		blobs:      make(map[string]Blob),
 	}
 }
 
@@ -428,4 +430,61 @@ func (db *MemoryDB) ListFunctionsWithActiveCron(_ context.Context) ([]Function, 
 
 func (db *MemoryDB) Ping(_ context.Context) error {
 	return nil
+}
+
+func (db *MemoryDB) CreateBlob(_ context.Context, blob Blob) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	// Only set CreatedAt if not already set (allows manual timestamps for testing)
+	if blob.CreatedAt == 0 {
+		blob.CreatedAt = time.Now().Unix()
+	}
+	db.blobs[blob.ID] = blob
+	return nil
+}
+
+func (db *MemoryDB) GetBlob(_ context.Context, functionID string, blobID string) (Blob, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	blob, ok := db.blobs[blobID]
+	if !ok || blob.FunctionID != functionID {
+		return Blob{}, ErrBlobNotFound
+	}
+	return blob, nil
+}
+
+func (db *MemoryDB) DeleteBlob(_ context.Context, functionID string, blobID string) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	blob, ok := db.blobs[blobID]
+	if !ok || blob.FunctionID != functionID {
+		return ErrBlobNotFound
+	}
+	delete(db.blobs, blobID)
+	return nil
+}
+
+func (db *MemoryDB) UpdateBlob(_ context.Context, blob Blob) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	existingBlob, ok := db.blobs[blob.ID]
+	if !ok || existingBlob.FunctionID != blob.FunctionID {
+		return ErrBlobNotFound
+	}
+	db.blobs[blob.ID] = blob
+	return nil
+}
+
+func (db *MemoryDB) ListBlobs(_ context.Context, functionID string) ([]Blob, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	var blobs []Blob
+	for _, blob := range db.blobs {
+		if blob.FunctionID == functionID {
+			blobs = append(blobs, blob)
+		}
+	}
+	return blobs, nil
 }

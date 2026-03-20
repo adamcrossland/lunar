@@ -14,6 +14,7 @@ var (
 	ErrNoActiveVersion           = errors.New("no active version")
 	ErrExecutionNotFound         = errors.New("execution not found")
 	ErrCannotDeleteActiveVersion = errors.New("cannot delete active version")
+	ErrBlobNotFound              = errors.New("blob not found")
 )
 
 // DB defines the database interface for the Lunar API.
@@ -89,4 +90,22 @@ type DB interface {
 
 	// Ping verifies the database connection is alive.
 	Ping(ctx context.Context) error
+
+	// CreateBlob inserts a new blob into the database.
+	CreateBlob(ctx context.Context, blob Blob) error
+
+	// GetBlob retrieves a blob by its ID.
+	// Returns ErrBlobNotFound if the blob does not exist.
+	GetBlob(ctx context.Context, functionID string, blobID string) (Blob, error)
+
+	// DeleteBlob removes a blob by its ID.
+	// Returns ErrBlobNotFound if the blob does not exist.
+	DeleteBlob(ctx context.Context, functionID string, blobID string) error
+
+	// UpdateBlob updates a blob's content and metadata.
+	// Returns ErrBlobNotFound if the blob does not exist.
+	UpdateBlob(ctx context.Context, blob Blob) error
+
+	// ListBlobs returns all blobs associated with a function.
+	ListBlobs(ctx context.Context, functionID string) ([]Blob, error)
 }

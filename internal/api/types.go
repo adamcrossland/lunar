@@ -147,3 +147,26 @@ type NextRunResponse struct {
 	NextRun      *int64  `json:"next_run,omitempty"`
 	NextRunHuman *string `json:"next_run_human,omitempty"`
 }
+
+// CreateBlobRequest is the request body for creating a new blob. It includes the name, MIME type,
+// content, and flags for whether the blob is public or global. The FunctionID is not included here
+// because it is part of the URL.
+type CreateBlobRequest struct {
+	Name     string `json:"name"`
+	MIMEType string `json:"mime_type"`
+	Content  string `json:"content"`
+	IsPublic bool   `json:"is_public"`
+	IsGlobal bool   `json:"is_global"`
+}
+
+// UpdateBlobRequest is the request body for updating an existing blob. All fields are optional,
+// and only the fields provided will be updated. The FunctionID is not included here because it
+// cannot be changed after creation.
+type UpdateBlobRequest struct {
+	FunctionID *string `json:"function_id,omitempty"` // Optional for validation, but not updatable
+	Name       *string `json:"name,omitempty"`
+	MIMEType   *string `json:"mime_type,omitempty"`
+	Content    *string `json:"content,omitempty"`
+	IsPublic   *bool   `json:"is_public,omitempty"`
+	IsGlobal   *bool   `json:"is_global,omitempty"`
+}

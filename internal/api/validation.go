@@ -338,3 +338,46 @@ func ValidateUpdateKvStoreRequest(req *UpdateKvStoreRequest) error {
 
 	return nil
 }
+
+func ValidateCreateBlobRequest(req *CreateBlobRequest, forFunction string) error {
+	if req == nil {
+		return &ValidationError{Field: "request", Message: "request cannot be nil"}
+	}
+
+	if strings.TrimSpace(req.Name) == "" {
+		return &ValidationError{Field: "name", Message: "name must be provided"}
+	}
+
+	if len(req.Content) == 0 {
+		return &ValidationError{Field: "content", Message: "content must be provided"}
+	}
+
+	if strings.TrimSpace(req.MIMEType) == "" {
+		req.MIMEType = "application/octet-stream" // Default MIME type
+	}
+
+	return nil
+}
+
+func ValidateUpdateBlobRequest(req *UpdateBlobRequest, functionID string) error {
+	if req == nil {
+		return &ValidationError{Field: "request", Message: "request cannot be nil"}
+	}
+	if req.Name != nil {
+		if strings.TrimSpace(*req.Name) == "" {
+			return &ValidationError{Field: "name", Message: "name cannot be empty"}
+		}
+	}
+	if req.Content != nil {
+		if len(*req.Content) == 0 {
+			return &ValidationError{Field: "content", Message: "content cannot be empty"}
+		}
+	}
+	if req.MIMEType != nil {
+		if strings.TrimSpace(*req.MIMEType) == "" {
+			return &ValidationError{Field: "mime_type", Message: "MIME type cannot be empty"}
+		}
+	}
+
+	return nil
+}
