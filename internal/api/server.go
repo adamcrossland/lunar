@@ -163,6 +163,13 @@ func (s *Server) setupRoutes() {
 	s.mux.Handle("GET /api/tokens", authMiddleware(http.HandlerFunc(HandleListAPITokens(s.db))))
 	s.mux.Handle("POST /api/tokens/{id}/revoke", authMiddleware(http.HandlerFunc(HandleRevokeAPIToken(s.db))))
 
+	// Blob Management - only need DB
+	s.mux.Handle("POST /api/blobs/{id}/{blobId}", authMiddleware(http.HandlerFunc(CreateBlobHandler(s.db))))
+	s.mux.Handle("GET /api/blobs/{id}/{blobId}", authMiddleware(http.HandlerFunc(GetBlobHandler(s.db))))
+	s.mux.Handle("DELETE /api/blobs/{id}/{blobId}", authMiddleware(http.HandlerFunc(DeleteBlobHandler(s.db))))
+	s.mux.Handle("PUT /api/blobs/{id}/{blobId}", authMiddleware(http.HandlerFunc(UpdateBlobHandler(s.db))))
+	s.mux.Handle("GET /api/blobs/{id}", authMiddleware(http.HandlerFunc(ListBlobsHandler(s.db))))
+
 	// Runtime Execution - needs all dependencies (NO AUTH - public endpoint)
 	// Register both exact match and wildcard patterns for routing support
 	executeHandler := ExecuteFunctionHandler(*s.execDeps)

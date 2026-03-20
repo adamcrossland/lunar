@@ -182,3 +182,18 @@ type UpdateFunctionRequest struct {
 	CronStatus    *string `json:"cron_status,omitempty"`
 	SaveResponse  *bool   `json:"save_response,omitempty"`
 }
+
+// Blob represents a binary large object associated with a function or the global scope.
+// Blobs can be used to store files, images, or any binary data that a function might need to
+// access during execution. Each blob has a unique ID, a name, MIME type, and content.
+// Blobs can be marked as public or private, and they have timestamps for creation and last update.
+type Blob struct {
+	ID         string `json:"id"`
+	FunctionID string `json:"function_id"`
+	Name       string `json:"name"`
+	MIMEType   string `json:"mime_type"`
+	Content    []byte `json:"content"`
+	IsPublic   bool   `json:"is_public"`
+	CreatedAt  int64  `json:"created_at"`
+	UpdatedAt  int64  `json:"updated_at"`
+}

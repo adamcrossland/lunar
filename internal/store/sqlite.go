@@ -811,3 +811,92 @@ func (db *SQLiteDB) UpdateAPITokenLastUsed(ctx context.Context, id string, times
 func (db *SQLiteDB) Ping(ctx context.Context) error {
 	return db.db.PingContext(ctx)
 }
+
+func (db *SQLiteDB) CreateBlob(ctx context.Context, blob Blob) error {
+	query := `INSERT INTO blobs (id, function_id, name, mime_type, content, created_at, updated_at)
+	          VALUES (?, ?, ?, ?, ?, ?, ?)`
+
+	_, err := db.db.ExecContext(ctx, query, blob.ID, blob.FunctionID, blob.Name, blob.MIMEType, blob.Content, blob.CreatedAt, blob.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("failed to create blob: %w", err)
+	}
+
+	return nil
+}
+
+func (db *SQLiteDB) GetBlob(ctx context.Context, functionID string, blobID string) (Blob, error) {
+	query := `SELECT id, function_id, name, mime_type, content, is_public, created_at, updated_at
+	          FROM blobs WHERE id = ? AND function_id = ?`
+	var blob Blob
+	err := db.db.QueryRowContext(ctx, query, blobID, functionID).Scan(&blob.ID, &blob.FunctionID, &blob.Name, &blob.MIMEType, &blob.Content, &blob.IsPublic, &blob.CreatedAt, &blob.UpdatedAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return Blob{}, ErrBlobNotFound
+	}
+
+	if err != nil {
+		return Blob{}, fmt.Errorf("failed to get blob: %w", err)
+	}
+
+	return blob, nil
+}
+
+func (db *SQLiteDB) DeleteBlob(ctx context.Context, functionID string, blobID string) error {
+	query := `DELETE FROM blobs WHERE id = ? AND function_id = ?`
+
+	result, err := db.db.ExecContext(ctx, query, blobID, functionID)
+	if err != nil {
+		return fmt.Errorf("failed to delete blob: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return ErrBlobNotFound
+	}
+
+	return nil
+}
+
+func (db *SQLiteDB) UpdateBlob(ctx context.Context, blob Blob) error {
+	query := `UPDATE blobs SET name = ?, mime_type = ?, content = ?, is_public = ?, updated_at = ? WHERE id = ? AND function_id = ?`
+
+	result, err := db.db.ExecContext(ctx, query, blob.Name, blob.MIMEType, blob.Content, blob.IsPublic, blob.UpdatedAt, blob.ID, blob.FunctionID)
+	if err != nil {
+		return fmt.Errorf("failed to update blob: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return ErrBlobNotFound
+	}
+
+	return nil
+}
+
+func (db *SQLiteDB) ListBlobs(ctx context.Context, functionID string) ([]Blob, error) {
+	query := `SELECT id, function_id, name, mime_type, content, is_public, created_at, updated_at
+	          FROM blobs WHERE function_id = ?`
+	rows, err := db.db.QueryContext(ctx, query, functionID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query blobs: %w", err)
+	}
+	defer func() { _ = rows.Close() }()
+
+	var blobs []Blob
+	for rows.Next() {
+		var blob Blob
+		if err := rows.Scan(&blob.ID, &blob.FunctionID, &blob.Name, &blob.MIMEType, &blob.Content, &blob.IsPublic, &blob.CreatedAt, &blob.UpdatedAt); err != nil {
+			return nil, fmt.Errorf("failed to scan blob: %w", err)
+		}
+		blobs = append(blobs, blob)
+	}
+
+	return blobs, rows.Err()
+}
