@@ -916,6 +916,7 @@ func GetNextRunHandler(database store.DB) http.HandlerFunc {
 	}
 }
 
+// GetBlobHandler returns a handler for getting a blob
 func GetBlobHandler(database store.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		functionID := r.PathValue("id")
@@ -935,6 +936,7 @@ func GetBlobHandler(database store.DB) http.HandlerFunc {
 	}
 }
 
+// CreateBlobHandler returns a handler for creating a blob
 func CreateBlobHandler(database store.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		functionID := r.PathValue("id")
@@ -981,6 +983,7 @@ func CreateBlobHandler(database store.DB) http.HandlerFunc {
 	}
 }
 
+// DeleteBlobHandler returns a handler for deleting a blob
 func DeleteBlobHandler(database store.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		functionID := r.PathValue("id")
@@ -1000,6 +1003,7 @@ func DeleteBlobHandler(database store.DB) http.HandlerFunc {
 	}
 }
 
+// UpdateBlobHandler returns a handler for updating a blob
 func UpdateBlobHandler(database store.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		functionID := r.PathValue("id")
@@ -1062,6 +1066,7 @@ func UpdateBlobHandler(database store.DB) http.HandlerFunc {
 	}
 }
 
+// ListBlobsHandler returns a handler for listing blobs
 func ListBlobsHandler(database store.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		functionID := r.PathValue("id")
