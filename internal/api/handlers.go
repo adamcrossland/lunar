@@ -1086,3 +1086,29 @@ func ListBlobsHandler(database store.DB) http.HandlerFunc {
 		writeJSON(w, http.StatusOK, blobs)
 	}
 }
+
+func ServeBlobHandler(database store.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		blobID := r.PathValue("id")
+
+		blob, err := database.GetBlob(r.Context(), "", blobID)
+		if err != nil {
+			if errors.Is(err, store.ErrBlobNotFound) {
+				writeError(w, http.StatusNotFound, "Blob not found")
+				return
+			}
+			writeError(w, http.StatusInternalServerError, "Failed to get blob")
+			return
+		}
+
+		if !blob.IsPublic {
+			// Don't reveal the existence of the blob if it's not public
+			writeError(w, http.StatusNotFound, "Blob not found")
+			return
+		}
+
+		w.Header().Set("Content-Type", blob.MIMEType)
+		w.WriteHeader(http.StatusOK)
+		w.Write(blob.Content)
+	}
+}

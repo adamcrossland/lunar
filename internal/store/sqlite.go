@@ -812,6 +812,7 @@ func (db *SQLiteDB) Ping(ctx context.Context) error {
 	return db.db.PingContext(ctx)
 }
 
+// Blob operations
 func (db *SQLiteDB) CreateBlob(ctx context.Context, blob Blob) error {
 	query := `INSERT INTO blobs (id, function_id, name, mime_type, content, created_at, updated_at)
 	          VALUES (?, ?, ?, ?, ?, ?, ?)`
