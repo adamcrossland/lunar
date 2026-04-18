@@ -1,4 +1,4 @@
-.PHONY: build build-cli generate-cli test lint clean run help dev install-tools fmt-frontend test-frontend test-cli-integration test-e2e test-all vendor-js docker fix
+.PHONY: build build-cli generate-cli test lint clean run help dev install-tools fmt-frontend test-frontend test-cli-integration test-e2e test-all vendor-js docker fix tag
 
 BINARY_NAME=lunar
 CLI_BINARY_NAME=lunar-cli
@@ -101,6 +101,13 @@ fix:
 docker:
 	@echo "Starting with Docker Compose..."
 	@docker compose up
+
+tag:
+	@if [ -z "$(VERSION)" ]; then echo "Usage: make tag VERSION=v0.5.2"; exit 1; fi
+	@git tag $(VERSION)
+	@git tag cli/$(VERSION)
+	@echo "Created tags: $(VERSION) and cli/$(VERSION)"
+	@echo "Push with: git push origin $(VERSION) cli/$(VERSION)"
 
 vendor-js:
 	@echo "Cleaning old vendored JS dependencies..."

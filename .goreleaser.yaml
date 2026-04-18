@@ -1,5 +1,10 @@
 version: 2
 
+before:
+  hooks:
+    - git tag cli/{{ .Tag }}
+    - git push origin cli/{{ .Tag }}
+
 builds:
   - id: server
     main: ./cmd
