@@ -63,6 +63,14 @@ A lightweight, self-hosted Function-as-a-Service platform written in Go with Lua
 
 ## Quick Start
 
+### Prerequisites
+
+- Go 1.26 or newer
+- `make`
+- Chrome or Chromium if you plan to run the E2E test suite
+
+For CLI internals and code generation details, see [cli/README.md](cli/README.md).
+
 ### Building from Source
 
 ```bash
@@ -77,15 +85,15 @@ make build
 ./build/lunar
 ```
 
-Another option:
-
-Run the following command once to install all required tools:
+For local development, you can also install the optional contributor tools:
 
 ```bash
 make install-tools
 ```
 
-Then start the development environment with:
+This installs `air` for live reload and `goreleaser` for release packaging.
+
+Then start the development server with:
 
 ```bash
 make dev
@@ -102,6 +110,19 @@ INFO Generated new API key key=cf31cb0cdc7811ca9cec6a3c77579b3ea28c1e4e10d6fc106
 ```
 
 When you access the dashboard, you'll be prompted to enter this API key to login. The key is also available in the `data/api_key.txt` file.
+
+### Your First Function
+
+1. Open `http://localhost:3000` and log in with the API key from `data/api_key.txt`.
+2. Create a new function named `hello-world`.
+3. Paste the sample handler below and save it.
+4. Copy the function ID and invoke it:
+
+```bash
+curl http://localhost:3000/fn/<function-id>
+```
+
+You should get back a JSON response. After that, open the function's execution history in the dashboard to inspect logs and request details.
 
 ## Writing Functions
 
@@ -297,6 +318,8 @@ To install them, ask your agent:
 # Start the device authorization flow (opens a browser tab for approval)
 lunar-cli --server http://your-lunar-server login
 
+# If the browser does not open automatically, use the printed approval URL and code.
+
 # The token is saved to ~/.config/lunar/config.yaml automatically
 # To log out and clear the stored token:
 lunar-cli logout
@@ -376,6 +399,12 @@ lunar-cli tokens list
 lunar-cli tokens revoke <token-id>
 ```
 
+#### LLM Reference
+
+```bash
+lunar-cli llms
+```
+
 #### Invoke
 
 Execute a function directly without authentication (functions are public by default):
@@ -422,6 +451,8 @@ This starts a local Go server and opens the test runner at `http://localhost:888
 ### E2E Tests (chromedp)
 
 End-to-end tests use [chromedp](https://github.com/chromedp/chromedp) to run a headless Chrome browser:
+
+Make sure Chrome or Chromium is installed before running them.
 
 ```bash
 make test-e2e

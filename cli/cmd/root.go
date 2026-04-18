@@ -25,7 +25,7 @@ var (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "lunar",
+	Use:   "lunar-cli",
 	Short: "Lunar CLI – manage your Lunar FaaS functions",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		cfg, _ := config.Load()

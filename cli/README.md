@@ -1,6 +1,16 @@
 # lunar-cli
 
-Command-line client for [Lunar](https://github.com/dimiro1/lunar). The majority of commands are **auto-generated** from the OpenAPI spec at `../internal/api/docs/openapi.yaml`, so the CLI always stays in sync with the API.
+Command-line client for [Lunar](https://github.com/dimiro1/lunar). This README is for contributors working on the CLI internals and code generation. If you just want to install and use the CLI, start with the [root README](../README.md#cli).
+
+The majority of commands are **auto-generated** from the OpenAPI spec at `../internal/api/docs/openapi.yaml`, so the CLI always stays in sync with the API.
+
+## Prerequisites
+
+- Go 1.26 or newer
+
+## Binary Name
+
+The released executable is named `lunar-cli`, and the Cobra help output uses the same command name.
 
 ## How it works
 
@@ -144,7 +154,7 @@ If an operation is too complex to generate (interactive prompts, streaming, etc.
 
 ## AI Agent Skills
 
-The CLI ships with [Claude Code](https://claude.ai/code) skill definitions that teach your AI coding agent how to use `lunar` and write Lua functions. Once installed, the agent will know the full CLI and Lua API without you having to explain anything.
+The CLI ships with [Claude Code](https://claude.ai/code) skill definitions that teach your AI coding agent how to use the Lunar CLI and write Lua functions. Once installed, the agent will know the full CLI and Lua API without you having to explain anything.
 
 Install the CLI first. If you are working from source in this directory, build it with `go build -o lunar-cli .` and use `./lunar-cli`.
 
@@ -167,5 +177,7 @@ go build -o lunar-cli .
 ## Installing locally
 
 ```bash
-go install .
+go install github.com/dimiro1/lunar/cli@latest
 ```
+
+If you are working from a local source checkout, prefer `go build -o lunar-cli .`.
