@@ -1,6 +1,7 @@
-.PHONY: build test lint clean run help dev install-tools fmt-frontend test-frontend test-e2e test-all vendor-js docker fix
+.PHONY: build build-cli generate-cli test lint clean run help dev install-tools fmt-frontend test-frontend test-e2e test-all vendor-js docker fix
 
 BINARY_NAME=lunar
+CLI_BINARY_NAME=lunar-cli
 BUILD_DIR=build
 
 # Frontend vendor dependency versions
@@ -11,28 +12,46 @@ JASMINE_VERSION=6.0.1
 
 help:
 	@echo "Available targets:"
-	@echo "  build         - Build the application"
-	@echo "  test          - Run Go unit tests"
-	@echo "  test-frontend - Open Jasmine frontend tests in browser"
-	@echo "  test-e2e      - Run E2E tests with headless Chrome"
-	@echo "  test-all      - Run all tests (unit + e2e)"
-	@echo "  lint          - Run golangci-lint"
-	@echo "  clean         - Remove build artifacts"
-	@echo "  run           - Build and run the application"
-	@echo "  all           - Run lint, test, and build"
-	@echo "  fmt-frontend  - Format frontend JS files with deno fmt"
-	@echo "  vendor-js     - Download/update vendored JS dependencies"
-	@echo "  fix           - Run go fix on all packages"
-	@echo "  docker        - Run with Docker Compose"
+	@echo "  build          - Build the server"
+	@echo "  build-cli      - Build the CLI"
+	@echo "  generate-cli   - Regenerate CLI from openapi.yaml (go generate)"
+	@echo "  test                  - Run Go unit tests (server + CLI)"
+	@echo "  test-cli-integration  - Run CLI integration tests against a real server"
+	@echo "  test-frontend  - Open Jasmine frontend tests in browser"
+	@echo "  test-e2e       - Run E2E tests with headless Chrome"
+	@echo "  test-all       - Run all tests (unit + e2e)"
+	@echo "  lint           - Run golangci-lint"
+	@echo "  clean          - Remove build artifacts"
+	@echo "  run            - Build and run the application"
+	@echo "  all            - Run lint, test, and build"
+	@echo "  fmt-frontend   - Format frontend JS files with deno fmt"
+	@echo "  vendor-js      - Download/update vendored JS dependencies"
+	@echo "  fix            - Run go fix on all packages"
+	@echo "  docker         - Run with Docker Compose"
 
 build:
-	@echo "Building..."
+	@echo "Building server..."
 	@mkdir -p $(BUILD_DIR)
 	@go build -o $(BUILD_DIR)/$(BINARY_NAME) ./cmd
+
+build-cli:
+	@echo "Building CLI..."
+	@mkdir -p $(BUILD_DIR)
+	@cd cli && go build -o ../$(BUILD_DIR)/$(CLI_BINARY_NAME) .
+
+generate-cli:
+	@echo "Regenerating CLI from openapi.yaml..."
+	@cd cli && go generate ./...
+	@echo "Done. Run 'make build-cli' to rebuild."
 
 test:
 	@echo "Running tests..."
 	@go test $$(go list ./... | grep -v /e2e)
+	@cd cli && go test ./cmd/... ./config/...
+
+test-cli-integration:
+	@echo "Running CLI integration tests (requires no server running on the test port)..."
+	@cd cli && go test -tags integration -v -timeout 60s ./integration/...
 
 lint:
 	@echo "Running linter..."
@@ -41,6 +60,7 @@ lint:
 clean:
 	@echo "Cleaning..."
 	@rm -rf $(BUILD_DIR)
+	@rm -f cli/cmd/*.gen.go cli/client/client.gen.go
 
 run:
 	@echo "Running application..."
@@ -74,8 +94,9 @@ test-all: test test-e2e
 	@echo "Run 'make test-frontend' to open browser tests manually"
 
 fix:
-	@echo "Running go fix..."
-	@go fix ./...
+	@echo "Running go fix (modernize)..."
+	@go fix -fixtool=$$(go env GOTOOLDIR)/fix ./...
+	@cd cli && go fix -fixtool=$$(go env GOTOOLDIR)/fix ./...
 
 docker:
 	@echo "Starting with Docker Compose..."

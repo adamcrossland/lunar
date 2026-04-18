@@ -817,7 +817,6 @@ paths:
         description: Unique identifier of the function
         schema:
           type: string
-      - 
     post:
       tags:
         - Functions
