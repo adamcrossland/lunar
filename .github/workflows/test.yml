@@ -34,33 +34,33 @@ jobs:
         run: go mod download
 
       - name: Download CLI dependencies
-        working-directory: cli
+        working-directory: lunar-cli
         run: go mod download
 
       - name: Download CLI integration dependencies
-        working-directory: cli/integration
+        working-directory: lunar-cli/integration
         run: go mod download
 
       - name: Verify dependencies
         run: go mod verify
 
       - name: Verify CLI dependencies
-        working-directory: cli
+        working-directory: lunar-cli
         run: go mod verify
 
       - name: Verify CLI integration dependencies
-        working-directory: cli/integration
+        working-directory: lunar-cli/integration
         run: go mod verify
 
       - name: Run tests
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic $(go list ./... | grep -v /e2e)
 
       - name: Run CLI tests
-        working-directory: cli
+        working-directory: lunar-cli
         run: go test -v ./...
 
       - name: Run CLI integration tests
-        working-directory: cli/integration
+        working-directory: lunar-cli/integration
         run: go test -tags integration -v -timeout 60s ./...
 
       - name: Upload coverage to Codecov
@@ -75,14 +75,14 @@ jobs:
         run: go build -v -o lunar ./cmd
 
       - name: Build CLI
-        working-directory: cli
+        working-directory: lunar-cli
         run: go build -v -o lunar-cli .
 
       - name: Run vet
         run: go vet ./...
 
       - name: Run vet on CLI
-        working-directory: cli
+        working-directory: lunar-cli
         run: go vet ./...
 
       - name: Run golangci-lint

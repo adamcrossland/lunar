@@ -1,10 +1,10 @@
-module github.com/dimiro1/lunar/cli/integration
+module github.com/dimiro1/lunar/lunar-cli/integration
 
 go 1.26.0
 
 require (
 	github.com/dimiro1/lunar v0.0.0
-	github.com/dimiro1/lunar/cli v0.0.0
+	github.com/dimiro1/lunar/lunar-cli v0.0.0
 	modernc.org/sqlite v1.49.1
 )
 
@@ -48,4 +48,4 @@ require (
 
 replace github.com/dimiro1/lunar => ../../
 
-replace github.com/dimiro1/lunar/cli => ../
+replace github.com/dimiro1/lunar/lunar-cli => ../

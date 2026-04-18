@@ -20,7 +20,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dimiro1/lunar/cli/cmd"
+	"github.com/dimiro1/lunar/lunar-cli/cmd"
 	"github.com/dimiro1/lunar/frontend"
 	"github.com/dimiro1/lunar/internal/api"
 	"github.com/dimiro1/lunar/internal/migrate"

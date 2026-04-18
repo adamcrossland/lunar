@@ -21,7 +21,7 @@ builds:
       - -s -w
 
   - id: cli
-    dir: cli
+    dir: lunar-cli
     main: .
     binary: lunar-cli
     env:

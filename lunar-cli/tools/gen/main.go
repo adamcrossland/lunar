@@ -409,7 +409,7 @@ func generateFile(tag, tagDesc string, cfg tagConfig, ops []opInfo) ([]byte, err
 	}
 	w(&b, "\n")
 	if needsClient {
-		w(&b, "\t\"github.com/dimiro1/lunar/cli/client\"\n")
+		w(&b, "\t\"github.com/dimiro1/lunar/lunar-cli/client\"\n")
 	}
 	w(&b, "\t\"github.com/spf13/cobra\"\n")
 	w(&b, ")\n\n")

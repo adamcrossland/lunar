@@ -9,8 +9,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/dimiro1/lunar/cli/client"
-	"github.com/dimiro1/lunar/cli/config"
+	"github.com/dimiro1/lunar/lunar-cli/client"
+	"github.com/dimiro1/lunar/lunar-cli/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 )

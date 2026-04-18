@@ -291,7 +291,7 @@ Lunar ships a command-line client (`lunar-cli`) that is auto-generated from the 
 ### Installation
 
 ```bash
-go install github.com/dimiro1/lunar/cli@latest
+go install github.com/dimiro1/lunar/lunar-cli@latest
 ```
 
 Or download a pre-built binary from the [Releases](https://github.com/dimiro1/lunar/releases) page (`lunar-cli_*` archives).

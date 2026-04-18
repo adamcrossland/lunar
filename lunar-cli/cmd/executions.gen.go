@@ -5,7 +5,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dimiro1/lunar/cli/client"
+	"github.com/dimiro1/lunar/lunar-cli/client"
 	"github.com/spf13/cobra"
 )
 

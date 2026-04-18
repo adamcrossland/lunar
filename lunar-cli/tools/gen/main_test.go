@@ -639,7 +639,7 @@ func TestGenerateFile_WithQueryFields_EmitsParamsStruct(t *testing.T) {
 	if !strings.Contains(s, "client.ListFunctionsParams") {
 		t.Error("expected Params struct")
 	}
-	if !strings.Contains(s, `"github.com/dimiro1/lunar/cli/client"`) {
+	if !strings.Contains(s, `"github.com/dimiro1/lunar/lunar-cli/client"`) {
 		t.Error("expected client import")
 	}
 }
@@ -764,7 +764,7 @@ func TestGenerateFile_NoClientImport_WhenNoQueryOrBody(t *testing.T) {
 	}
 	src, _ := generateFile("API Tokens", "desc", cfg, ops)
 	// No query fields, no body → client import should not be present
-	if strings.Contains(string(src), `"github.com/dimiro1/lunar/cli/client"`) {
+	if strings.Contains(string(src), `"github.com/dimiro1/lunar/lunar-cli/client"`) {
 		t.Error("client import should be omitted when no query params or body")
 	}
 }

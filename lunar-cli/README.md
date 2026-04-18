@@ -60,7 +60,7 @@ Tags **not** generated (implemented manually):
 cli/
 ├── main.go                 Entry point
 ├── generate.go             go:generate directive for the Cobra generator
-├── go.mod                  Module: github.com/dimiro1/lunar/cli
+├── go.mod                  Module: github.com/dimiro1/lunar/lunar-cli
 │
 ├── cmd/
 │   ├── root.go             Root command, global flags (--server, --token), mustClient()
@@ -177,7 +177,7 @@ go build -o lunar-cli .
 ## Installing locally
 
 ```bash
-go install github.com/dimiro1/lunar/cli@latest
+go install github.com/dimiro1/lunar/lunar-cli@latest
 ```
 
 If you are working from a local source checkout, prefer `go build -o lunar-cli .`.

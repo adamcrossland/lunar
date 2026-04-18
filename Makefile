@@ -37,21 +37,21 @@ build:
 build-cli:
 	@echo "Building CLI..."
 	@mkdir -p $(BUILD_DIR)
-	@cd cli && go build -o ../$(BUILD_DIR)/$(CLI_BINARY_NAME) .
+	@cd lunar-cli && go build -o ../$(BUILD_DIR)/$(CLI_BINARY_NAME) .
 
 generate-cli:
 	@echo "Regenerating CLI from openapi.yaml..."
-	@cd cli && go generate ./...
+	@cd lunar-cli && go generate ./...
 	@echo "Done. Run 'make build-cli' to rebuild."
 
 test:
 	@echo "Running tests..."
 	@go test $$(go list ./... | grep -v /e2e)
-	@cd cli && go test ./...
+	@cd lunar-cli && go test ./...
 
 test-cli-integration:
 	@echo "Running CLI integration tests (requires no server running on the test port)..."
-	@cd cli/integration && go test -tags integration -v -timeout 60s ./...
+	@cd lunar-cli/integration && go test -tags integration -v -timeout 60s ./...
 
 lint:
 	@echo "Running linter..."
@@ -96,7 +96,7 @@ test-all: test test-e2e
 fix:
 	@echo "Running go fix (modernize)..."
 	@go fix -fixtool=$$(go env GOTOOLDIR)/fix ./...
-	@cd cli && go fix -fixtool=$$(go env GOTOOLDIR)/fix ./...
+	@cd lunar-cli && go fix -fixtool=$$(go env GOTOOLDIR)/fix ./...
 
 docker:
 	@echo "Starting with Docker Compose..."

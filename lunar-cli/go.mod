@@ -1,4 +1,4 @@
-module github.com/dimiro1/lunar/cli
+module github.com/dimiro1/lunar/lunar-cli
 
 go 1.26.0
 
