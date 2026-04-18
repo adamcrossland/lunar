@@ -63,6 +63,14 @@ A lightweight, self-hosted Function-as-a-Service platform written in Go with Lua
 
 ## Quick Start
 
+### Prerequisites
+
+- Go 1.26 or newer
+- `make`
+- Chrome or Chromium if you plan to run the E2E test suite
+
+For CLI internals and code generation details, see [cli/README.md](cli/README.md).
+
 ### Building from Source
 
 ```bash
@@ -77,15 +85,15 @@ make build
 ./build/lunar
 ```
 
-Another option:
-
-Run the following command once to install all required tools:
+For local development, you can also install the optional contributor tools:
 
 ```bash
 make install-tools
 ```
 
-Then start the development environment with:
+This installs `air` for live reload and `goreleaser` for release packaging.
+
+Then start the development server with:
 
 ```bash
 make dev
@@ -102,6 +110,19 @@ INFO Generated new API key key=cf31cb0cdc7811ca9cec6a3c77579b3ea28c1e4e10d6fc106
 ```
 
 When you access the dashboard, you'll be prompted to enter this API key to login. The key is also available in the `data/api_key.txt` file.
+
+### Your First Function
+
+1. Open `http://localhost:3000` and log in with the API key from `data/api_key.txt`.
+2. Create a new function named `hello-world`.
+3. Paste the sample handler below and save it.
+4. Copy the function ID and invoke it:
+
+```bash
+curl http://localhost:3000/fn/<function-id>
+```
+
+You should get back a JSON response. After that, open the function's execution history in the dashboard to inspect logs and request details.
 
 ## Writing Functions
 
@@ -263,6 +284,147 @@ curl -H "Authorization: Bearer YOUR_API_KEY" http://localhost:3000/api/functions
 
 Note: Function execution endpoints (`/fn/{id}`) do not require authentication.
 
+## CLI
+
+Lunar ships a command-line client (`lunar-cli`) that is auto-generated from the OpenAPI spec, so it always stays in sync with the API.
+
+### Installation
+
+```bash
+go install github.com/dimiro1/lunar/cli@latest
+```
+
+Or download a pre-built binary from the [Releases](https://github.com/dimiro1/lunar/releases) page (`lunar-cli_*` archives).
+
+### AI Agent Skills
+
+AI agent skills require the CLI to be installed first.
+
+Lunar ships built-in skill definitions that teach your AI coding agent how to use the CLI and write Lua functions.
+
+```bash
+lunar-cli skills list             # show available skills
+lunar-cli skills show lunar-cli   # CLI command reference
+lunar-cli skills show lunar-lua   # Lua function authoring guide
+```
+
+To install them, ask your agent:
+
+> "Install the Lunar skills from the `lunar-cli skills` command."
+
+### Authentication
+
+```bash
+# Start the device authorization flow (opens a browser tab for approval)
+lunar-cli --server http://your-lunar-server login
+
+# If the browser does not open automatically, use the printed approval URL and code.
+
+# The token is saved to ~/.config/lunar/config.yaml automatically
+# To log out and clear the stored token:
+lunar-cli logout
+```
+
+You can also skip the login flow and pass a token directly:
+
+```bash
+lunar-cli --token YOUR_API_KEY functions list
+
+# Or via environment variable:
+export LUNAR_SERVER=http://your-lunar-server
+export LUNAR_TOKEN=YOUR_API_KEY
+lunar-cli functions list
+```
+
+### Configuration
+
+The CLI stores its configuration in `~/.config/lunar/config.yaml`:
+
+```yaml
+server: http://localhost:3000
+token: <your-api-token>
+```
+
+Flags and environment variables always take precedence over the config file:
+
+| Priority | Source |
+|----------|--------|
+| 1 (highest) | `--server` / `--token` flags |
+| 2 | `LUNAR_SERVER` / `LUNAR_TOKEN` env vars |
+| 3 | `~/.config/lunar/config.yaml` |
+
+### Commands
+
+#### Functions
+
+```bash
+lunar-cli functions list [--limit 20] [--offset 0]
+lunar-cli functions create --name hello-world --code handler.lua
+lunar-cli functions create --name hello-world --code -  # read code from stdin
+lunar-cli functions get <id>
+lunar-cli functions update <id> --name new-name
+lunar-cli functions update <id> --cron-schedule "*/5 * * * *" --cron-status active
+lunar-cli functions update <id> --disabled
+lunar-cli functions delete <id>
+lunar-cli functions env <id> --env API_KEY=secret --env DEBUG=true
+lunar-cli functions kv <id> --kv counter=0 --kv state=idle
+lunar-cli functions kv <id> --kv shared=value --global   # write to global KV
+lunar-cli functions next-run <id>
+```
+
+#### Versions
+
+```bash
+lunar-cli versions list <function-id>
+lunar-cli versions get <function-id> <version-number>
+lunar-cli versions activate <function-id> <version-id>
+lunar-cli versions delete <function-id> <version-id>
+lunar-cli versions diff <function-id> <v1> <v2>
+```
+
+#### Executions
+
+```bash
+lunar-cli executions list <function-id>
+lunar-cli executions get <execution-id>
+lunar-cli executions logs <execution-id>
+lunar-cli executions ai-requests <execution-id>
+lunar-cli executions email-requests <execution-id>
+```
+
+#### API Tokens
+
+```bash
+lunar-cli tokens list
+lunar-cli tokens revoke <token-id>
+```
+
+#### LLM Reference
+
+```bash
+lunar-cli llms
+```
+
+#### Invoke
+
+Execute a function directly without authentication (functions are public by default):
+
+```bash
+lunar-cli invoke <function-id>
+lunar-cli invoke <function-id> --method POST --body '{"key":"value"}'
+lunar-cli invoke <function-id> --method POST --body -   # read body from stdin
+```
+
+### Keeping the CLI in Sync with the API
+
+The CLI commands are auto-generated from `internal/api/docs/openapi.yaml`. When the API changes, regenerate with:
+
+```bash
+cd cli
+go generate ./...
+go build ./...
+```
+
 ## Testing
 
 ### Go Tests
@@ -289,6 +451,8 @@ This starts a local Go server and opens the test runner at `http://localhost:888
 ### E2E Tests (chromedp)
 
 End-to-end tests use [chromedp](https://github.com/chromedp/chromedp) to run a headless Chrome browser:
+
+Make sure Chrome or Chromium is installed before running them.
 
 ```bash
 make test-e2e

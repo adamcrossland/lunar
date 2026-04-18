@@ -1,7 +1,8 @@
 version: 2
 
 builds:
-  - main: ./cmd
+  - id: server
+    main: ./cmd
     binary: lunar
     env:
       - CGO_ENABLED=0
@@ -14,11 +15,41 @@ builds:
     ldflags:
       - -s -w
 
+  - id: cli
+    dir: cli
+    main: .
+    binary: lunar-cli
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+
 archives:
-  - formats:
+  - id: server-archive
+    ids:
+      - server
+    formats:
       - tar.gz
     name_template: >-
       {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+
+  - id: cli-archive
+    ids:
+      - cli
+    formats:
+      - tar.gz
+    name_template: >-
+      {{ .ProjectName }}-cli_
       {{- .Version }}_
       {{- .Os }}_
       {{- .Arch }}

@@ -383,16 +383,7 @@ func UpdateKvStoreHandler(database store.DB, kvStore kv.Store) http.HandlerFunc 
 
 		// Delete removed kv entries
 		for key := range currentKvEntries {
-			found := false
-			for _, kv := range req.KVEntries {
-				if kv.Key == key {
-					found = true
-					break
-				}
-			}
-			// If the key from the store is not found in the request, it means it was removed
-			// and we should delete it from the store.
-			if !found {
+			if _, ok := req.Kv[key]; !ok {
 				if err := kvStore.Delete(useStore, key); err != nil {
 					writeError(w, http.StatusInternalServerError, "Failed to delete kv entry")
 					return
@@ -401,8 +392,8 @@ func UpdateKvStoreHandler(database store.DB, kvStore kv.Store) http.HandlerFunc 
 		}
 
 		// Set new/updated kv entries
-		for _, kv := range req.KVEntries {
-			if err := kvStore.Set(useStore, kv.Key, kv.Value); err != nil {
+		for key, value := range req.Kv {
+			if err := kvStore.Set(useStore, key, value); err != nil {
 				writeError(w, http.StatusInternalServerError, "Failed to set kv entry")
 				return
 			}

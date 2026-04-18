@@ -323,15 +323,15 @@ func ValidateUpdateKvStoreRequest(req *UpdateKvStoreRequest) error {
 		return &ValidationError{Field: "request", Message: "request cannot be nil"}
 	}
 
-	if req.KVEntries == nil {
-		return &ValidationError{Field: "kvEntries", Message: "kvEntries cannot be nil"}
+	if req.Kv == nil {
+		return &ValidationError{Field: "kv", Message: "kv cannot be nil"}
 	}
 
-	for _, kv := range req.KVEntries {
-		if err := validateStoreKey(kv.Key); err != nil {
+	for key, value := range req.Kv {
+		if err := validateStoreKey(key); err != nil {
 			return err
 		}
-		if err := validateStoreValue(kv.Value); err != nil {
+		if err := validateStoreValue(value); err != nil {
 			return err
 		}
 	}
