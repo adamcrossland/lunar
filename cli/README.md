@@ -146,15 +146,17 @@ If an operation is too complex to generate (interactive prompts, streaming, etc.
 
 The CLI ships with [Claude Code](https://claude.ai/code) skill definitions that teach your AI coding agent how to use `lunar` and write Lua functions. Once installed, the agent will know the full CLI and Lua API without you having to explain anything.
 
+Install the CLI first. If you are working from source in this directory, build it with `go build -o lunar-cli .` and use `./lunar-cli`.
+
 ```bash
-lunar skills list             # show available skills
-lunar skills show lunar-cli   # CLI command reference
-lunar skills show lunar-lua   # Lua function authoring guide
+lunar-cli skills list             # show available skills
+lunar-cli skills show lunar-cli   # CLI command reference
+lunar-cli skills show lunar-lua   # Lua function authoring guide
 ```
 
 To install them, ask your agent:
 
-> "Install the Lunar skills from the `lunar skills` CLI command."
+> "Install the Lunar skills from the `lunar-cli skills` CLI command."
 
 ## Building
 

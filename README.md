@@ -275,6 +275,22 @@ go install github.com/dimiro1/lunar/cli@latest
 
 Or download a pre-built binary from the [Releases](https://github.com/dimiro1/lunar/releases) page (`lunar-cli_*` archives).
 
+### AI Agent Skills
+
+AI agent skills require the CLI to be installed first.
+
+Lunar ships built-in skill definitions that teach your AI coding agent how to use the CLI and write Lua functions.
+
+```bash
+lunar-cli skills list             # show available skills
+lunar-cli skills show lunar-cli   # CLI command reference
+lunar-cli skills show lunar-lua   # Lua function authoring guide
+```
+
+To install them, ask your agent:
+
+> "Install the Lunar skills from the `lunar-cli skills` command."
+
 ### Authentication
 
 ```bash
