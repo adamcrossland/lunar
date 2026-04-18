@@ -105,9 +105,9 @@ docker:
 tag:
 	@if [ -z "$(VERSION)" ]; then echo "Usage: make tag VERSION=v0.5.2"; exit 1; fi
 	@git tag $(VERSION)
-	@git tag cli/$(VERSION)
-	@echo "Created tags: $(VERSION) and cli/$(VERSION)"
-	@echo "Push with: git push origin $(VERSION) cli/$(VERSION)"
+	@git tag lunar-cli/$(VERSION)
+	@echo "Created tags: $(VERSION) and lunar-cli/$(VERSION)"
+	@echo "Push with: git push origin $(VERSION) lunar-cli/$(VERSION)"
 
 vendor-js:
 	@echo "Cleaning old vendored JS dependencies..."

@@ -2,8 +2,8 @@ version: 2
 
 before:
   hooks:
-    - git tag cli/{{ .Tag }}
-    - git push origin cli/{{ .Tag }}
+    - git tag lunar-cli/{{ .Tag }}
+    - git push origin lunar-cli/{{ .Tag }}
 
 builds:
   - id: server
